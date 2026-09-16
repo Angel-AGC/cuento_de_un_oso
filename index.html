@@ -162,34 +162,10 @@
     font-style: italic;
   }
 
-  .cover-cta {
-    position: absolute;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #f1c40f;
-    color: #1a252f;
-    font-family: 'Merienda', cursive, sans-serif;
-    font-weight: 800;
-    font-size: 14px;
-    padding: 11px 26px;
-    border-radius: 30px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-    animation: pulse 2s infinite;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: translateX(-50%) scale(1); }
-    50% { transform: translateX(-50%) scale(1.06); }
-  }
-
-  /* End Cover Button Overlay */
+  /* End Cover Text Overlay (Clean, no buttons) */
   .end-overlay {
     position: absolute;
-    bottom: 28px;
+    bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
     background: linear-gradient(135deg, rgba(20, 30, 45, 0.92), rgba(10, 15, 25, 0.96));
@@ -203,33 +179,16 @@
   }
   .end-overlay h2 {
     font-family: 'Merienda', cursive, serif;
-    font-size: 23px;
+    font-size: 24px;
     color: #f1c40f;
     margin-bottom: 4px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
   }
   .end-overlay p {
     font-family: 'Lora', serif;
-    font-size: 13px;
-    color: #ecf0f1;
-    margin-bottom: 12px;
-    line-height: 1.4;
-  }
-  .btn-restart {
-    background: #f1c40f;
-    color: #121d28;
-    border: none;
-    font-family: 'Merienda', cursive;
     font-size: 13.5px;
-    font-weight: 800;
-    padding: 10px 22px;
-    border-radius: 25px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    transition: all 0.3s;
-  }
-  .btn-restart:hover {
-    background: #f39c12;
-    transform: scale(1.05);
+    color: #ecf0f1;
+    line-height: 1.4;
   }
 
   /* Authentic Storybook Typography */
@@ -356,7 +315,6 @@
         <div class="end-overlay">
           <h2>🌟 FIN DEL CUENTO</h2>
           <p>¡Has completado la gran aventura del Osito Tito y sus amigos!</p>
-          <button class="btn-restart" onclick="goToStart(event)">🔄 Leer de Nuevo</button>
         </div>
       </div>
     </div>
@@ -416,9 +374,6 @@
           <h2>El gran rescate del Osito Tito</h2>
           <span>Un cuento de curiosidad y amistad</span>
         </div>
-        <div class="cover-cta">
-          <span>👉 ABRIR LIBRO ➔</span>
-        </div>
         <div class="corner-curl"></div>
       </div>
 
@@ -467,9 +422,7 @@
     });
   });
 
-  // Clicking on open left/right areas to turn
   book.addEventListener("click", (e) => {
-    if (e.target.closest('.btn-restart')) return;
     const rect = book.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     if (clickX > rect.width / 2) {
@@ -499,6 +452,11 @@
       leaf.style.zIndex = currentLocation + 1;
       currentLocation++;
       updateBookState();
+    } else {
+      // At the very end, clicking restarts back to cover
+      while (currentLocation > 0) {
+        goPrev();
+      }
     }
   }
 
@@ -512,14 +470,6 @@
     }
   }
 
-  function goToStart(e) {
-    if (e) e.stopPropagation();
-    while (currentLocation > 0) {
-      goPrev();
-    }
-  }
-
-  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === ' ') {
       goNext();
